@@ -17,7 +17,7 @@ public class AnimeService {
     private AnimeRepository repository;
 
     public Page<Anime> findAllAnime(int pageNum, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
 
         return repository.findAll(pageable);
     }

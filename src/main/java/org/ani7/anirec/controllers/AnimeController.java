@@ -13,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class AnimeController {
 
     @Autowired
@@ -20,7 +21,7 @@ public class AnimeController {
 
     @GetMapping("/anime")
     public List<Anime> getAllAnime(@RequestParam(defaultValue = "1") String pageNum, @RequestParam(defaultValue = "25") String pageSize) {
-        Page<Anime> page = service.findAllAnime(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+        Page<Anime> page = service.findAllAnime(Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
 
         return page.getContent();
     }
@@ -36,25 +37,30 @@ public class AnimeController {
     }
 
     @PostMapping("/anime")
-    public ResponseEntity<Anime> createAnime(Anime anime) {
+    public ResponseEntity<Anime> createAnime(@RequestBody Anime anime) {
         service.saveAnime(anime);
         return new ResponseEntity<>(anime, HttpStatus.CREATED);
     }
 
     @PutMapping("/anime/{id}")
-    public ResponseEntity<Anime> updateAnime(Anime anime, @PathVariable Integer id) {
+    public ResponseEntity<Anime> updateAnime(@RequestBody Anime anime, @PathVariable Integer id) {
         try {
             Anime oldAnime = service.getAnimeById(id);
             anime.setAnimeId(id);
             service.saveAnime(anime);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(anime, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
     @DeleteMapping("/anime/{id}")
-    public void deleteAnime(@PathVariable Integer id) {
-        service.deleteAnimeById(id);
+    public ResponseEntity<Anime> deleteAnime(@PathVariable Integer id) {
+        try {
+            service.deleteAnimeById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 }
