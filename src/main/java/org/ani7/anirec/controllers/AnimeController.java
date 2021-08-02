@@ -1,6 +1,7 @@
 package org.ani7.anirec.controllers;
 
 import org.ani7.anirec.models.Anime;
+import org.ani7.anirec.payloads.ApiResponse;
 import org.ani7.anirec.services.AnimeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -12,21 +13,20 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
-@CrossOrigin("*")
+@RequestMapping("/api/anime")
 public class AnimeController {
 
     @Autowired
     private AnimeService service;
 
-    @GetMapping("/anime")
+    @GetMapping("")
     public List<Anime> getAllAnime(@RequestParam(defaultValue = "1") String pageNum, @RequestParam(defaultValue = "25") String pageSize) {
         Page<Anime> page = service.findAllAnime(Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
 
         return page.getContent();
     }
 
-    @GetMapping("/anime/{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Anime> getAnimeById(@PathVariable Integer id) {
         try {
             Anime anime = service.getAnimeById(id);
@@ -36,13 +36,13 @@ public class AnimeController {
         }
     }
 
-    @PostMapping("/anime")
+    @PostMapping("")
     public ResponseEntity<Anime> createAnime(@RequestBody Anime anime) {
         service.saveAnime(anime);
         return new ResponseEntity<>(anime, HttpStatus.CREATED);
     }
 
-    @PutMapping("/anime/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Anime> updateAnime(@RequestBody Anime anime, @PathVariable Integer id) {
         try {
             Anime oldAnime = service.getAnimeById(id);
@@ -54,11 +54,11 @@ public class AnimeController {
         }
     }
 
-    @DeleteMapping("/anime/{id}")
-    public ResponseEntity<Anime> deleteAnime(@PathVariable Integer id) {
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAnime(@PathVariable Integer id) {
         try {
             service.deleteAnimeById(id);
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(new ApiResponse(true, "Anime deleted successfully"), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
