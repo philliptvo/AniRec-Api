@@ -17,7 +17,7 @@ public class ReviewsService {
   private ReviewsRepository repository;
 
   public Page<Reviews> findAllReviews(int pageNum, int pageSize) {
-    Pageable pageable = PageRequest.of(pageNum - 1, pageSize);
+    Pageable pageable = PageRequest.of(pageNum, pageSize);
 
     return repository.findAll(pageable);
   }
