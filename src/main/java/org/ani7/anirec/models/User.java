@@ -90,18 +90,18 @@ public class User {
     }
 
     public LocalDate getDateOfBirth() {
-        return DateOfBirth;
+        return dateOfBirth;
     }
 
     public void setDateOfBirth(LocalDate dateOfBirth) {
-        DateOfBirth = dateOfBirth;
+        dateOfBirth = dateOfBirth;
     }
 
     public Role getUserType() {
-        return UserType;
+        return userType;
     }
 
     public void setUserType(Role userType) {
-        UserType = userType;
+        userType = userType;
     }
 }
