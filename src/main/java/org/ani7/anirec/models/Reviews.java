@@ -13,12 +13,12 @@ public class Reviews {
   private int score;
   private String review;
   private Anime anime;
-  private Users user;
+  private User user;
 
   public Reviews() {
   }
 
-  public Reviews(int reviewId, int score, String review, Anime anime, Users user) {
+  public Reviews(int reviewId, int score, String review, Anime anime, User user) {
     this.reviewId = reviewId;
     this.score = score;
     this.review = review;
@@ -26,7 +26,7 @@ public class Reviews {
     this.user = user;
   }
 
-  public Reviews(int score, String review, Anime anime, Users user) {
+  public Reviews(int score, String review, Anime anime, User user) {
     this.score = score;
     this.review = review;
     this.anime = anime;
@@ -69,11 +69,11 @@ public class Reviews {
     this.anime = anime;
   }
 
-  public Users getUser() {
+  public User getUser() {
     return user;
   }
 
-  public void setUser(Users user) {
+  public void setUser(User user) {
     this.user = user;
   }
 }
