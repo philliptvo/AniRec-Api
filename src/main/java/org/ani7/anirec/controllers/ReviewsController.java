@@ -1,6 +1,5 @@
 package org.ani7.anirec.controllers;
 
-
 import org.ani7.anirec.models.Reviews;
 import org.ani7.anirec.services.ReviewsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +13,7 @@ import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin("*")
 public class ReviewsController {
   @Autowired
   private ReviewsService service;
@@ -21,7 +21,7 @@ public class ReviewsController {
   @GetMapping("/reviews")
   public List<Reviews> getAllReviews(@RequestParam(defaultValue = "1")
       String pageNum, @RequestParam(defaultValue = "25") String pageSize) {
-    Page<Reviews> page = service.findAllReviews(Integer.parseInt(pageNum), Integer.parseInt(pageSize));
+    Page<Reviews> page = service.findAllReviews(Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
 
     return page.getContent();
   }
@@ -37,13 +37,13 @@ public class ReviewsController {
   }
 
   @PostMapping("/reviews")
-  public ResponseEntity<Reviews> createReview(Reviews review) {
+  public ResponseEntity<Reviews> createReview(@RequestBody Reviews review) {
     service.saveReview(review);
     return new ResponseEntity<>(review, HttpStatus.CREATED);
   }
 
   @PutMapping("/reviews/{id}")
-  public ResponseEntity<Reviews> updateReview(Reviews review, @PathVariable Integer id) {
+  public ResponseEntity<Reviews> updateReview(@RequestBody Reviews review, @PathVariable Integer id) {
     try {
       Reviews oldReview = service.getReviewById(id);
       review.setReviewId(id);
@@ -55,7 +55,12 @@ public class ReviewsController {
   }
 
   @DeleteMapping("/reviews/{id}")
-  public void deleteReview(@PathVariable Integer id) {
-    service.deleteReviewById(id);
+  public ResponseEntity<Reviews> deleteReview(@PathVariable Integer id) {
+    try {
+      service.deleteReviewById(id);
+      return new ResponseEntity<>(HttpStatus.OK);
+    } catch (NoSuchElementException e) {
+      return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
   }
 }

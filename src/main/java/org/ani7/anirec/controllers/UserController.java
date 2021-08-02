@@ -6,6 +6,7 @@ import org.ani7.anirec.security.CurrentUser;
 import org.ani7.anirec.security.UserPrincipal;
 import org.ani7.anirec.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,8 +30,10 @@ public class UserController {
     }
 
     @GetMapping("")
-    public List<User> getAllUsers() {
-        return service.findAllUsers();
+    public List<User> getAllUsers(@RequestParam(defaultValue = "1") String pageNum,
+                                  @RequestParam(defaultValue = "25") String pageSize) {
+        Page<User> page = service.findAllUsers(Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
+        return page.getContent();
     }
 
     @GetMapping("/{userName}")

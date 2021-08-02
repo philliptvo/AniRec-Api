@@ -15,9 +15,9 @@ public class User {
     private String email;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    private LocalDate DateOfBirth;
+    private LocalDate dateOfBirth;
     @Enumerated(EnumType.STRING)
-    private Role UserType;
+    private Role userType;
 
     public enum Gender {
         NONBINARY, MALE, FEMALE
@@ -37,8 +37,8 @@ public class User {
         this.password = password;
         this.email = email;
         this.gender = gender;
-        DateOfBirth = dateOfBirth;
-        UserType = userType;
+        this.dateOfBirth = dateOfBirth;
+        this.userType = userType;
     }
 
     public String getUserName() {
