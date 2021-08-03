@@ -1,11 +1,17 @@
 package org.ani7.anirec.services;
 
+import org.ani7.anirec.models.Anime;
 import org.ani7.anirec.models.Snippets;
+import org.ani7.anirec.models.User;
 import org.ani7.anirec.repositories.SnippetsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SnippetsService {
@@ -17,37 +23,26 @@ public class SnippetsService {
         this.repository = repository;
     }
 
+    public Page<Snippets> findAllSnippets(int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
+
+        return repository.findAll(pageable);
+    }
+
     public Snippets saveSnip(Snippets snippet) {
         return repository.save(snippet);
-    }
-
-    public List<Snippets> saveSnips(List<Snippets> snippets) {
-        return repository.saveAll(snippets);
-    }
-
-    public List<Snippets> getSnippets() {
-        return repository.findAll();
     }
 
     public Snippets getSnipById(int snipId) {
         return repository.findById(snipId).orElse(null);
     }
 
-    public Snippets getSnipByUserName(String userName) {
-        return repository.findByUserName(userName);
+    public Optional<Snippets> getSnipByUserName(User user) {
+        return repository.findByUserName(user.getUserName());
     }
 
     public String deleteSnipById(Integer snipId) {
         repository.deleteById(snipId);
         return "Snippets removed!" + snipId;
     }
-
-    public Snippets updateSnippet(Snippets snippet) {
-        Snippets existingSnippet = repository.findById(snippet.getSnipId()).orElse(null);
-        existingSnippet.setSnippet(existingSnippet.getSnippet());
-        existingSnippet.setUserName(existingSnippet.getUserName());
-        existingSnippet.setAnimeId(existingSnippet.getAnimeId());
-        return repository.save(existingSnippet);
-    }
-
 }

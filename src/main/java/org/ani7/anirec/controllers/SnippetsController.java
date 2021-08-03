@@ -1,52 +1,83 @@
 package org.ani7.anirec.controllers;
 
 import org.ani7.anirec.models.Snippets;
+import org.ani7.anirec.models.Snippets;
+import org.ani7.anirec.models.User;
+import org.ani7.anirec.payloads.ApiResponse;
 import org.ani7.anirec.services.SnippetsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/snippets")
 public class SnippetsController {
 
     @Autowired
     private SnippetsService service;
 
-    @PostMapping("/createSnippet")
-    public Snippets addSnippet(@RequestBody Snippets snippet) {
-        return service.saveSnip(snippet);
+    @GetMapping("")
+    public List<Snippets> getAllSnippets(@RequestParam(defaultValue = "1") String pageNum,
+                                             @RequestParam(defaultValue = "25") String pageSize) {
+        Page<Snippets> page = service.findAllSnippets(Integer.parseInt(pageNum) - 1,
+                Integer.parseInt(pageSize));
+        return page.getContent();
     }
 
-    @PostMapping("/snippets")
-    public List<Snippets> addProducts(@RequestBody List<Snippets> snippets) {
-        return service.saveSnips(snippets);
+    @GetMapping("{id}")
+    public ResponseEntity<Snippets> getSnippetsById(@PathVariable Integer id) {
+        try {
+            Snippets snippet = service.getSnipById(id);
+            return new ResponseEntity<>(snippet, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/snippets")
-    public List<Snippets> findAllSnippets() {
-        return service.getSnippets();
+    @GetMapping("/{userName}")
+    public ResponseEntity<Snippets> getSnippetsByName(@PathVariable User user) {
+        try {
+            Snippets snippet = service.getSnipByUserName(user).orElseThrow(() -> new NoSuchElementException());
+            return new ResponseEntity<>(snippet, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @GetMapping("/snippet/{id}")
-    public Snippets findSnippetById(@PathVariable int id) {
-        return service.getSnipById(id);
+    @PostMapping("")
+    public ResponseEntity<Snippets> createSnippet(@RequestBody Snippets snippet) {
+        service.saveSnip(snippet);
+        return new ResponseEntity<>(snippet, HttpStatus.CREATED);
     }
 
-    @GetMapping("/snippet/{name}")
-    public Snippets findSnippetByUserName(@PathVariable String userName) {
-        return service.getSnipByUserName(userName);
+    @PutMapping("/{id}")
+    public ResponseEntity<Snippets> updateSnippet(@RequestBody Snippets snippet, @PathVariable Integer id) {
+        try {
+            Snippets oldSnippets = service.getSnipById(id);
+            snippet.setSnipId(id);
+            service.saveSnip(snippet);
+            return new ResponseEntity<>(snippet, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
-    @PutMapping("/snippets")
-    public Snippets updateSnippet(@RequestBody Snippets snippet) {
-        return service.updateSnippet(snippet);
-    }
 
-    @DeleteMapping("/snippets/delete/{id}")
-    public String deleteProduct(@PathVariable int id) {
-        return service.deleteSnipById(id);
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteSnippet(@PathVariable Integer id) {
+        try {
+            service.deleteSnipById(id);
+            return new ResponseEntity<>(new ApiResponse(true, "Snippets deleted successfully"),
+                    HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
 }
