@@ -9,19 +9,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
+@Transactional
 public class SnippetsService {
 
-    private final SnippetsRepository repository;
-
     @Autowired
-    public SnippetsService(SnippetsRepository repository) {
-        this.repository = repository;
-    }
+    private SnippetsRepository repository;
 
     public Page<Snippets> findAllSnippets(int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
@@ -37,8 +34,12 @@ public class SnippetsService {
         return repository.findById(snipId).orElse(null);
     }
 
-    public Optional<Snippets> getSnipByUserName(User user) {
-        return repository.findByUserName(user.getUserName());
+    public List<Snippets> getSnipByUser(User user) {
+        return repository.findByUser(user);
+    }
+
+    public List<Snippets> getSnipByAnime(Anime anime) {
+        return repository.findByAnime(anime);
     }
 
     public String deleteSnipById(Integer snipId) {

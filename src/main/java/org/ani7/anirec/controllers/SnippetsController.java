@@ -1,8 +1,6 @@
 package org.ani7.anirec.controllers;
 
 import org.ani7.anirec.models.Snippets;
-import org.ani7.anirec.models.Snippets;
-import org.ani7.anirec.models.User;
 import org.ani7.anirec.payloads.ApiResponse;
 import org.ani7.anirec.services.SnippetsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +21,7 @@ public class SnippetsController {
 
     @GetMapping("")
     public List<Snippets> getAllSnippets(@RequestParam(defaultValue = "1") String pageNum,
-                                             @RequestParam(defaultValue = "25") String pageSize) {
+                                         @RequestParam(defaultValue = "25") String pageSize) {
         Page<Snippets> page = service.findAllSnippets(Integer.parseInt(pageNum) - 1,
                 Integer.parseInt(pageSize));
         return page.getContent();
@@ -33,16 +31,6 @@ public class SnippetsController {
     public ResponseEntity<Snippets> getSnippetsById(@PathVariable Integer id) {
         try {
             Snippets snippet = service.getSnipById(id);
-            return new ResponseEntity<>(snippet, HttpStatus.OK);
-        } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
-
-    @GetMapping("/{userName}")
-    public ResponseEntity<Snippets> getSnippetsByName(@PathVariable User user) {
-        try {
-            Snippets snippet = service.getSnipByUserName(user).orElseThrow(() -> new NoSuchElementException());
             return new ResponseEntity<>(snippet, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -66,9 +54,7 @@ public class SnippetsController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-
-
-
+    
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSnippet(@PathVariable Integer id) {
         try {

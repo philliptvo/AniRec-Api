@@ -10,7 +10,11 @@ public class Snippets {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int snipId;
     private String snippet;
+    @ManyToOne
+    @JoinColumn(name = "UserName")
     private User user;
+    @ManyToOne
+    @JoinColumn(name = "AnimeId")
     private Anime anime;
 
     public Snippets() {
