@@ -1,18 +1,21 @@
 package org.ani7.anirec.models;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.*;
 
 @Entity
 @Table(name = "Reviews")
-@JsonIgnoreProperties({"hibernateLazyInitializer"})
 public class Reviews {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private int reviewId;
   private int score;
   private String review;
+  @ManyToOne
+  @JoinColumn(name = "AnimeId")
   private Anime anime;
+  @ManyToOne
+  @JoinColumn(name = "UserName")
   private User user;
 
   public Reviews() {
