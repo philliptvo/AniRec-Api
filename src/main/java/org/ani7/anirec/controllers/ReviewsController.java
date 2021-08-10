@@ -47,7 +47,7 @@ public class ReviewsController {
   public ResponseEntity<Reviews> updateReview(@RequestBody Reviews review, @PathVariable Integer id) {
     try {
       Reviews oldReview = service.getReviewById(id);
-      oldReview.setReviewId(id);
+      review.setReviewId(id);
       service.saveReview(review);
       return new ResponseEntity<>(review, HttpStatus.OK);
     } catch (NoSuchElementException e) {
