@@ -27,7 +27,7 @@ public class CharactersController {
         return page.getContent();
     }
 
-    @GetMapping("{id}")
+        @GetMapping("{id}")
     public ResponseEntity<Characters> getCharacterById(@PathVariable Integer id) {
         try {
             Characters character = service.getCharactersById(id);
