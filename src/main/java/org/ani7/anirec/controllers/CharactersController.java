@@ -17,20 +17,20 @@ import java.util.NoSuchElementException;
 public class CharactersController {
 
     @Autowired
-    private CharactersService service;
+    private CharactersService charactersService;
 
     @GetMapping("")
     public List<Characters> getAllCharacters(@RequestParam(defaultValue = "1") String pageNum,
                                         @RequestParam(defaultValue = "25") String pageSize) {
-        Page<Characters> page = service.findAllCharacters(Integer.parseInt(pageNum) - 1,
+        Page<Characters> page = charactersService.findAllCharacters(Integer.parseInt(pageNum) - 1,
                 Integer.parseInt(pageSize));
         return page.getContent();
     }
 
-        @GetMapping("{id}")
+    @GetMapping("{id}")
     public ResponseEntity<Characters> getCharacterById(@PathVariable Integer id) {
         try {
-            Characters character = service.getCharactersById(id);
+            Characters character = charactersService.getCharactersById(id);
             return new ResponseEntity<>(character, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -38,9 +38,10 @@ public class CharactersController {
     }
 
     @GetMapping("/{characterName}")
-    public ResponseEntity<Characters> getCharactersByName(@PathVariable String cName) {
+    public ResponseEntity<Characters> getCharactersByName(@PathVariable String characterName) {
         try {
-            Characters character = service.getCharactersByName(cName).orElseThrow(() -> new NoSuchElementException());
+            Characters character = charactersService.getCharactersByName(characterName).
+                    orElseThrow(() -> new NoSuchElementException());
             return new ResponseEntity<>(character, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -49,16 +50,16 @@ public class CharactersController {
 
     @PostMapping("")
     public ResponseEntity<Characters> createCharacter(@RequestBody Characters character) {
-        service.saveCharacter(character);
+        charactersService.saveCharacter(character);
         return new ResponseEntity<>(character, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Characters> updateCharacter(@RequestBody Characters character, @PathVariable Integer id) {
         try {
-            Characters oldCharacter = service.getCharactersById(id);
+            Characters oldCharacter = charactersService.getCharactersById(id);
             character.setCharacterId(id);
-            service.saveCharacter(character);
+            charactersService.saveCharacter(character);
             return new ResponseEntity<>(character, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -68,8 +69,9 @@ public class CharactersController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCharacter(@PathVariable Integer id) {
         try {
-            service.deleteCharactersById(id);
-            return new ResponseEntity<>(new ApiResponse(true, "Character deleted successfully"), HttpStatus.OK);
+            charactersService.deleteCharactersById(id);
+            return new ResponseEntity<>(new ApiResponse(true, "Character deleted successfully"),
+                    HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

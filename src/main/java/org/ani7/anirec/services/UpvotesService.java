@@ -37,9 +37,9 @@ public class UpvotesService {
     return repository.findByUser(user);
   }
 
-  public List<Upvotes> getUpvoteByAnime(Anime anime) {
-    return repository.findByAnime(anime);
-  }
+//  public List<Upvotes> getUpvoteByAnime(Anime anime) {
+//    return repository.findByAnime(anime);
+//  }
 
   public String deleteUpvoteById(Integer upvoteId) {
     repository.deleteById(upvoteId);

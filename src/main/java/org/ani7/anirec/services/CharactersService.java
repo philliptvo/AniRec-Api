@@ -23,7 +23,6 @@ public class CharactersService {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
         return repository.findAll(pageable);
     }
-
     public void saveCharacter(Characters characters) {
         repository.save(characters);
     }
@@ -33,7 +32,7 @@ public class CharactersService {
     }
 
     public Optional<Characters> getCharactersByName(String cName) {
-        return repository.findCharacterByName(cName);
+        return repository.findCharacterByCharacterName(cName);
     }
 
     public void deleteCharactersById(Integer characterId) {

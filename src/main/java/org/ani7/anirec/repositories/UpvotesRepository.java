@@ -10,5 +10,5 @@ import java.util.List;
 public interface UpvotesRepository extends JpaRepository<Upvotes, Integer> {
   List<Upvotes> findByUser(User user);
 
-  List<Upvotes> findByAnime(Anime anime);
+//  List<Upvotes> findByAnime(Anime anime);
 }
