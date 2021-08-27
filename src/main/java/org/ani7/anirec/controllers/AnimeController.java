@@ -9,6 +9,7 @@ import org.ani7.anirec.services.AnimeService;
 import org.ani7.anirec.services.GenreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -28,8 +29,8 @@ public class AnimeController {
     private GenreService genreService;
 
     @GetMapping("")
-    public List<Anime> getAllAnime(@RequestParam(defaultValue = "1") String pageNum, @RequestParam(defaultValue = "25") String pageSize) {
-        Page<Anime> page = animeService.findAllAnime(Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
+    public List<Anime> getAllAnime(@Param("keyword") String keyword, @RequestParam(defaultValue = "1") String pageNum, @RequestParam(defaultValue = "25") String pageSize) {
+        Page<Anime> page = animeService.findAllAnime(keyword, Integer.parseInt(pageNum) - 1, Integer.parseInt(pageSize));
 
         return page.getContent();
     }

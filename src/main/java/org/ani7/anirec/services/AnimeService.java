@@ -16,9 +16,12 @@ public class AnimeService {
     @Autowired
     private AnimeRepository repository;
 
-    public Page<Anime> findAllAnime(int pageNum, int pageSize) {
+    public Page<Anime> findAllAnime(String keyword, int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
 
+        if (keyword != null) {
+            return repository.search(keyword, pageable);
+        }
         return repository.findAll(pageable);
     }
 

@@ -20,9 +20,12 @@ public class SnippetsService {
     @Autowired
     private SnippetsRepository repository;
 
-    public Page<Snippets> findAllSnippets(int pageNum, int pageSize) {
+    public Page<Snippets> findAllSnippets(String keyword, int pageNum, int pageSize) {
         Pageable pageable = PageRequest.of(pageNum, pageSize);
 
+        if (keyword != null) {
+            return repository.search(keyword, pageable);
+        }
         return repository.findAll(pageable);
     }
 

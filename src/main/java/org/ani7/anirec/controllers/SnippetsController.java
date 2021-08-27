@@ -5,6 +5,7 @@ import org.ani7.anirec.payloads.ApiResponse;
 import org.ani7.anirec.services.SnippetsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,9 +21,9 @@ public class SnippetsController {
     private SnippetsService service;
 
     @GetMapping("")
-    public List<Snippets> getAllSnippets(@RequestParam(defaultValue = "1") String pageNum,
+    public List<Snippets> getAllSnippets(@Param("keyword") String keyword, @RequestParam(defaultValue = "1") String pageNum,
                                          @RequestParam(defaultValue = "25") String pageSize) {
-        Page<Snippets> page = service.findAllSnippets(Integer.parseInt(pageNum) - 1,
+        Page<Snippets> page = service.findAllSnippets(keyword, Integer.parseInt(pageNum) - 1,
                 Integer.parseInt(pageSize));
         return page.getContent();
     }
@@ -54,7 +55,7 @@ public class SnippetsController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
-    
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteSnippet(@PathVariable Integer id) {
         try {

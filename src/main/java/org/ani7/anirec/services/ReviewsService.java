@@ -17,34 +17,37 @@ import java.util.List;
 @Transactional
 public class ReviewsService {
 
-  @Autowired
-  private ReviewsRepository repository;
+    @Autowired
+    private ReviewsRepository repository;
 
-  public Page<Reviews> findAllReviews(int pageNum, int pageSize) {
-    Pageable pageable = PageRequest.of(pageNum, pageSize);
+    public Page<Reviews> findAllReviews(String keyword, int pageNum, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNum, pageSize);
 
-    return repository.findAll(pageable);
-  }
+        if (keyword != null) {
+            return repository.search(keyword, pageable);
+        }
+        return repository.findAll(pageable);
+    }
 
-  public void saveReview(Reviews review) {
-    repository.save(review);
-  }
+    public void saveReview(Reviews review) {
+        repository.save(review);
+    }
 
 
-  public Reviews getReviewById(int reviewId) {
-    return repository.findById(reviewId).orElse(null);
-  }
+    public Reviews getReviewById(int reviewId) {
+        return repository.findById(reviewId).orElse(null);
+    }
 
-  public List<Reviews> getReviewByUser(User user) {
-    return repository.findByUser(user);
-  }
+    public List<Reviews> getReviewByUser(User user) {
+        return repository.findByUser(user);
+    }
 
-  public List<Reviews> getReviewByAnime(Anime anime) {
-    return repository.findByAnime(anime);
-  }
+    public List<Reviews> getReviewByAnime(Anime anime) {
+        return repository.findByAnime(anime);
+    }
 
-  public String deleteReviewById(Integer reviewId) {
-    repository.deleteById(reviewId);
-    return "Review " + reviewId + "has been removed!";
-  }
+    public String deleteReviewById(Integer reviewId) {
+        repository.deleteById(reviewId);
+        return "Review " + reviewId + "has been removed!";
+    }
 }
